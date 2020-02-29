@@ -3,14 +3,14 @@
 				<!-- Content Header (Page header) -->
 				<section class="content-header">
 					<h1>
-						<?php echo $this->lang->line($page_title) ?>
-						<small><?php echo $fullname ?></small>
+						<?= $this->lang->line($page_title) ?>
+						<small><?= $fullname ?></small>
 					</h1> 
 				</section>
 				<!-- Main content -->
 				<section class="content"> 
 					
-					<p><?php echo $this->session->flashdata('msg') ?></p>
+					<p><?= $this->session->flashdata('msg') ?></p>
 					<p>This is your account, where you can track all your subscriptions and payments</p>
 					 
 					<?php if ($products): ?>  
@@ -37,8 +37,9 @@
 						</div>					
 					<?php else: ?> 
 						 
-						<h4><?php echo $this->my_config->alert('You do not have any products at this moment, you can use use the add product menu item to activate one of our products') ?></h4>   
+						<h4><?= $this->my_config->alert('You do not have any products at this moment, you can use use the add product menu item to activate one of our products') ?></h4>   
 						<hr> 
+						<a href="<?= site_url('users/product/add') ?>" class="btn btn-lg btn-success"> <i class="fa fa-plus"></i> Add Product</a>
 
 					<?php endif ?> 					
 

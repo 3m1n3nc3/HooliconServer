@@ -7,9 +7,15 @@ include_once APPPATH . '/third_party/cpanel-UAPI-php-class/cpaneluapi.class.php'
 
 class Cpanel {
 
-    function __construct() {
-        $this->CI = & get_instance();//'9XRVKUSQQBRBCT559BW1DBZJDX3FWTLK'
-        $this->cPanel = new cpanelAPI('collaged', 'idontknowmypassword1A@', 'standard14.doveserver.com');
+    function __construct() 
+    {
+        $this->CI = & get_instance();
+        
+        $hostname = $this->CI->my_config->item('cpanel_host');
+        $username = $this->CI->my_config->item('cpanel_username');
+        $password = $this->CI->my_config->item('cpanel_password');
+        
+        $this->cPanel = new cpanelAPI($username, $password, $hostname);   
     }
 
     /**
@@ -71,7 +77,7 @@ class Cpanel {
      */
     public function subdomain($data = array(), $function = 'addsubdomain')
     {    
-        $response = $this->cPanel->uapi->post->SubDomain->$function($data); 
+        $response = $this->cPanel->uapi->post->SubDomain->$function($data);
         return $response;
     }
 

@@ -246,6 +246,7 @@ class Admin extends Admin_Controller {
                 $save['lname']  = $this->input->post('lname');
                 $save['phone']  = $this->input->post('phone'); 
                 $save['email']  = $this->input->post('email');  
+                $save['address'] = $this->input->post('address');
                 $save['username']  = $this->input->post('username');  
 
                 $save = $this->admin_model->add($save);
@@ -253,7 +254,7 @@ class Admin extends Admin_Controller {
                     $login = array('admin' => $save['username']);
                     $this->session->set_userdata($login);
                 } 
-                $this->session->set_flashdata('msg', $this->my_config->alert(ucwords($data['site_name']).' Your Profile has been updated', 'success'));
+                $this->session->set_flashdata('msg', $this->my_config->alert(ucwords($data['name']).' Your Profile has been updated', 'success'));
                 redirect('admin/admin/update');   
             }   
 

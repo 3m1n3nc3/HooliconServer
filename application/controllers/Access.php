@@ -11,7 +11,7 @@ class Access extends Access_Controller {
 
     public function index()
     {
-		redirect('access/signup');  	
+		redirect('access/login');  	
     }
 
 	/**

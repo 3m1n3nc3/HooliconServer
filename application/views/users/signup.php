@@ -1,11 +1,11 @@
 <div class="login-box">
 	<div class="login-logo">
-		<a href="<?php echo site_url('') ?>"><?php echo $this->my_config->item('site_name') ?></a>
+		<a href="<?php echo site_url('') ?>"><img src="<?php echo $this->creative_lib->fetch_image($this->my_config->item('site_logo')) ?>"/><?php //echo $this->my_config->item('site_name') ?></a>
 	</div>
 	<!-- /.login-logo -->
 	<div class="card">
 		<div class="card-body login-card-body">
-			<p class="login-box-msg">Sign up to access products</p>
+			<p class="login-box-msg">Sign up to products</p>
 			<p><?php echo $this->session->flashdata('msg') ?></p> 
 			<?php echo form_open('access/signup'); ?>
 

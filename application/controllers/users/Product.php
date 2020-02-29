@@ -6,7 +6,7 @@ class Product extends User_Controller {
     public function __construct()
     {
         parent::__construct();
-        // Your own constructor code
+        $this->genref = $this->enc_lib->generateToken(5, 1, $this->my_config->item('payment_ref_pref'));
     }
 
     public function index()
@@ -36,8 +36,11 @@ class Product extends User_Controller {
         $data['products'] = $this->product_model->get(); 
         $data['page_title'] = 'add_product'; 
 		$data['fullname'] = $data['user']['name']; 
-        $ref = $this->enc_lib->generateToken(5, 1, $this->my_config->item('payment_ref_pref'));
-        $this->session->set_userdata(['payment' => ['ref' => $ref]]);
+
+        if (!isset($_SESSION['payment']['ref'])) 
+        {
+            $this->session->set_userdata(['payment' => ['ref' => $this->genref]]);
+        } 
 
     	$this->load->view('layout/header', $data);    
 		$this->load->view('product/add', $data);  	 
@@ -46,12 +49,17 @@ class Product extends User_Controller {
 
     public function plan($product = null) 
     {    
-    
         $data = $this->account;
         $data['page_title'] = 'choose_plan'; 
 		$data['product'] = $this->product_model->get($product); 
 		$data['plans'] = $this->product_model->get_plan(); 
         $data['fullname'] = $data['name']; 
+ 
+        if (!isset($_SESSION['payment']['ref'])) 
+        {
+            $this->session->set_userdata(['payment' => ['ref' => $this->genref]]);
+        } 
+        
     	$this->load->view('layout/header', $data);    
 		$this->load->view('product/plan', $data);  	 
     	$this->load->view('layout/footer', $data);   
@@ -65,6 +73,11 @@ class Product extends User_Controller {
         $data['fullname'] = $data['name']; 
         $data['page_title'] = 'checkout'; 
         $ref = $this->session->userdata('payment')['ref'];
+ 
+        if (!isset($_SESSION['payment']['ref'])) 
+        {
+            $this->session->set_userdata(['payment' => ['ref' => $this->genref]]);
+        } 
 
         $data['product'] = $this->product_model->get($product);
         $data['plan'] = $this->product_model->get_plan($plan); 
@@ -110,7 +123,7 @@ class Product extends User_Controller {
 
         $check_ref = $payment['ref'] ? $this->product_model->get_payments(['reference' => $payment['ref']]) : ''; 
 
-        if ($this->session->has_userdata('payment')) {
+        if (isset($_SESSION['payment'])) {
             $this->load->library('paystack');
             $verify_pay = $this->paystack->pay($payment['ref']);
 
@@ -134,6 +147,7 @@ class Product extends User_Controller {
                         $data['load_invoice'] = $this->load->view('product/invoice_inline', $data, TRUE);  
                         $this->session->set_flashdata('msg', $this->my_config->alert(ucwords($account['name']).$this->lang->line('payment_proccessed').$data['product']['title'], 'success')); 
                     }
+                    unset($_SESSION['payment']);
                 } 
                 else 
                 { 

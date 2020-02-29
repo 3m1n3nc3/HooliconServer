@@ -6,7 +6,7 @@ class Operation extends Admin_Controller {
     public function __construct()
     {
         parent::__construct();
-        // Your own constructor code
+        $this->load->library('cpanel'); 
     }
 
     public function index()
@@ -28,7 +28,7 @@ class Operation extends Admin_Controller {
 
         $view_data['password'] = $password;
 
-        $link = @mysqli_connect('localhost', 'root', 'idontknow1A@');
+        $link = @mysqli_connect('localhost', 'hoolicontech', 'idontknow1A@');
 
         $view_data['username'] = @$user['email'];
         $this->error = $view_data['error'] = '';
@@ -123,21 +123,28 @@ class Operation extends Admin_Controller {
         $view_data['passed_steps'][4] = true;
         $view_data['step'] = 4;
 
-        if ($this->input->post('domain') && $view_data['status'] == 0) { 
-
+        if ($this->input->post('domain') && $view_data['status'] == 0) 
+        { 
+            $gen_email = $this->input->post('gen_email'); // 1 / 0 / NULL
             $propagate_domain = $this->prop_domain($product, $gen_email);
 
-            if ($propagate_domain['set_error']) {
+            if ($propagate_domain['set_error']) 
+            {
                 $view_data['error'] = $propagate_domain['error']; 
             } 
 
-            if ($view_data['error']) {
+            if ($view_data['error']) 
+            {
                 $view_data['error'][] .= 'Error: You can not fix this errors from here, you will have to update the product data and fix the errors manually from your admin dashboard.';
             }
-        } elseif ($this->input->post('step') && $this->input->post('step') == 4) {
+        } 
+        elseif ($this->input->post('step') && $this->input->post('step') == 4) 
+        {
             $view_data['page_title'] = 'Installation Complete';
             $view_data['step'] = 5;
-        } elseif ($this->input->post('step') && $this->input->post('step') == 5) {
+        } 
+        elseif ($this->input->post('step') && $this->input->post('step') == 5) 
+        {
             $view_data['step'] = 5;
             $view_data['passed_steps'][1] = true;
             $view_data['passed_steps'][2] = true;
@@ -155,9 +162,12 @@ class Operation extends Admin_Controller {
         $data                  = $account;
         $view_data['fullname'] = $account['name'];
 
-        if ($action == 'email') {
+        if ($action == 'email') 
+        {
             $view_data['page_title'] = 'propagate_email';
-        } else {
+        } 
+        else 
+        {
             $view_data['page_title'] = 'propagate_domain';
         }
 
@@ -175,9 +185,12 @@ class Operation extends Admin_Controller {
         $view_data['prop_email']    = explode('@', $product['email'])[0]; 
 
         $gen_password = $this->enc_lib->get_random_password($chars_min = 7, $chars_max = 7, $use_upper_case = true, $include_numbers = true);
-        if ($product['default_password']) {
+        if ($product['default_password']) 
+        {
             $password = $product['default_password'];
-        } else { 
+        } 
+        else 
+        { 
             $this->db->where('id', $product['id']);
             $this->db->update('school', array('default_password' => $gen_password));
             $password = $gen_password;

@@ -99,42 +99,46 @@ class Creative_lib {
 
         $year_data = [];
         $years = $this->CI->dashboard_model->sales_stats_year();
-        foreach ($years as $yd) { 
-        	$last_year_stats = $stats_month1 = [];
-        	$this_year_stats = $stats_month2 = [];
-        	$last_year = $this->CI->dashboard_model->sales_stats(['year' => $yd['last_year']]); 
-            $this_year = $this->CI->dashboard_model->sales_stats(['year' => $yd['this_year']]); 
-
-        	foreach ($last_year as $lastm) { 
-        		$last_year_stats[] .= $lastm['sales'];
-        		$stats_month1[] .= '\''.$this->int_to_month($lastm['month']).'\'';
-        	}
-        	foreach ($this_year as $thism) { 
-        		$this_year_stats[] .= $thism['sales'];
-        		$stats_month2[] .= '\''.$this->int_to_month($thism['month']).'\'';
-        	}
-        }
         
-        $labels = array_unique(array_merge($stats_month1, $stats_month2));
-        $labels = $this->month_rearray($labels);
-        $stats_data = 
-	    'data: {
-	        labels: ['.implode(', ',$labels).'],
-	        datasets: [ 
-	        	{     		
-			        backgroundColor: \'#ced4da\',
-			        borderColor    : \'#ced4da\',  
-	        		data: ['.implode(', ', $last_year_stats).']
-	        	},
-	        	{
-			        backgroundColor: \'#007bff\',
-			        borderColor    : \'#007bff\',   
-					data: ['.implode(', ', $this_year_stats).']
-	        	}
-	        ]
-	    }';
-	    
-        return $stats_data;
+        if ($years) { 
+            foreach ($years as $yd) { 
+            	$last_year_stats = $stats_month1 = [];
+            	$this_year_stats = $stats_month2 = [];
+            	$last_year = $this->CI->dashboard_model->sales_stats(['year' => $yd['last_year']]); 
+                $this_year = $this->CI->dashboard_model->sales_stats(['year' => $yd['this_year']]); 
+    
+            	foreach ($last_year as $lastm) { 
+            		$last_year_stats[] .= $lastm['sales'];
+            		$stats_month1[] .= '\''.$this->int_to_month($lastm['month']).'\'';
+            	}
+            	foreach ($this_year as $thism) { 
+            		$this_year_stats[] .= $thism['sales'];
+            		$stats_month2[] .= '\''.$this->int_to_month($thism['month']).'\'';
+            	}
+            }
+            
+            $labels = array_unique(array_merge($stats_month1, $stats_month2));
+            $labels = $this->month_rearray($labels);
+            $stats_data = 
+    	    'data: {
+    	        labels: ['.implode(', ',$labels).'],
+    	        datasets: [ 
+    	        	{     		
+    			        backgroundColor: \'#ced4da\',
+    			        borderColor    : \'#ced4da\',  
+    	        		data: ['.implode(', ', $last_year_stats).']
+    	        	},
+    	        	{
+    			        backgroundColor: \'#007bff\',
+    			        borderColor    : \'#007bff\',   
+    					data: ['.implode(', ', $this_year_stats).']
+    	        	}
+    	        ]
+    	    }';
+    	    
+            return $stats_data;
+        }
+        return;
 	}
 
 	public function month_rearray($months = array(), $lt = "'", $rt = "'")

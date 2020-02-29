@@ -90,7 +90,7 @@
 										
 											<div class="col-md-12 form-group">  
 												<label for="type">Address</label>
-												<textarea name="address" class="form-control" ><?php echo set_value('address') ? set_value('address') : $address; ?></textarea> 
+												<textarea name="address" class="form-control"><?php echo set_value('address') ? set_value('address') : $address; ?></textarea> 
 												<?php echo form_error('address'); ?>
 											</div>  
 										</div>  

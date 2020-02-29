@@ -3,7 +3,7 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class MY_Config {
+class My_config {
 
     function __construct() {
         $this->CI = & get_instance();

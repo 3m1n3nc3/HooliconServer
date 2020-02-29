@@ -13,9 +13,10 @@ class Admin_model extends CI_Model {
      * This function will return the configuration settings from the db
      * If key is not provided, then it will fetch all the records form the table.
      * @param string $key
+     * @param integer $arr
      * @return mixed
      */
-    public function get_settings($key = null) {
+    public function get_settings($key = null, $arr = 0) {
         $this->db->select('setting_key, setting_value')->from('settings');
         if ($key != null) {
             $this->db->where('setting_key', $key); 
@@ -24,6 +25,7 @@ class Admin_model extends CI_Model {
         }
         $query = $this->db->get();
         if ($key != null) {
+            if ($arr) return $query->row_array();
             return $query->row_array()['setting_value'];
         } else {
             return $query->result_array();
@@ -32,7 +34,7 @@ class Admin_model extends CI_Model {
 
     public function save_settings($data) {
         foreach (array_keys($data) as $setting_key) {
-            if ($this->get_settings($setting_key)) { 
+            if ($this->get_settings($setting_key, 1) !== NULL) { 
                 $value = array('setting_value' => $data[$setting_key]);
 
                 $this->db->where('setting_key', $setting_key);
@@ -41,8 +43,7 @@ class Admin_model extends CI_Model {
                 $value = array('setting_key' => $setting_key, 'setting_value' => $data[$setting_key]);
 
                 $this->db->insert('settings', $value);
-                $insert_id = $this->db->insert_id();
-                return $insert_id;
+                $insert_id = $this->db->insert_id(); 
             }
         } 
     } 

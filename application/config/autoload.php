@@ -60,7 +60,7 @@ $autoload['packages'] = array();
 */
 $autoload['libraries'] = array(
 	'database', 'form_validation', 'session', 'upload', 'pagination', 'Licenser', 'Aes', 'Enc_lib', 'Curler', 
-	'Account_Data', 'MY_Config', 'Cpanel', 'Creative_lib', 'Ip', 'Intl'
+	'Account_Data', 'my_config', 'Creative_lib', 'Ip', 'Intl'
 );
 
 /*
