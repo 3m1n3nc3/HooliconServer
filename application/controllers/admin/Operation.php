@@ -28,7 +28,38 @@ class Operation extends Admin_Controller {
 
         $view_data['password'] = $password;
 
-        $link = @mysqli_connect('localhost', 'hoolicontech', 'idontknow1A@');
+        // Check if this is a test site
+        $database = '';
+        if ($this->my_config->item('live_site')) 
+        {
+            $database = $this->my_config->item('db_prefix') . $product['username'];
+
+            $args = array('name' => $database);
+
+            // Check if the database exists
+            if (!$this->cpanel->mysql($args, 'check_database')) 
+            {
+                // Create a new database
+                $this->cpanel->mysql($args, 'create_database');
+
+                // Set the users privileges on the new table
+                $prevl = array(
+                    'user' => $this->db->username, 
+                    'database' => $database,
+                    'privileges' => 'ALL PRIVILEGES'
+                );
+
+                $this->cpanel->mysql($prevl, 'set_privileges_on_database');
+            }
+
+            // Start the MySQLi Connection            
+            $link = @mysqli_connect($this->db->hostname, $this->db->username, $this->db->password, $database);
+        }
+        else
+        {
+            // Start the MySQLi Connection
+            $link = @mysqli_connect($this->db->hostname, $this->db->username, $this->db->password);
+        }
 
         $view_data['username'] = @$user['email'];
         $this->error = $view_data['error'] = '';
@@ -45,12 +76,18 @@ class Operation extends Admin_Controller {
         );
 
         if (!$link) {
-            $this->error .= "Error: Unable to connect to MySQL Database." . PHP_EOL;
+            $this->error .= "Error: Unable to connect to MySQL Database '" . $database . "'." . PHP_EOL;
+            $view_data['db_error'] = $this->error;
         } else {
             $view_data['debug'] .= "Success: Connection to " . $this->input->post('database') . " database is done successfully."; 
         }
 
-        if ($product && $this->input->post()) {
+        if (isset($view_data['db_error'])) 
+        {
+            $view_data['step'] = 1;
+        }
+        elseif ($product && $this->input->post()) 
+        {
             if ($this->input->post('step') && $this->input->post('step') == 2) {
                 $view_data['page_title'] = 'Database Installation';
                 $view_data['passed_steps'][1] = true;

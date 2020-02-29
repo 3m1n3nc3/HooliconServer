@@ -34,7 +34,7 @@ class Cpanel {
     public function mysql($data = array(), $function = 'get_server_information')
     {   
         $response = $this->cPanel->uapi->post->Mysql->$function($data);  
-
+        
         return $response->data;
     }
 

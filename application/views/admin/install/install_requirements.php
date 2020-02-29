@@ -12,6 +12,12 @@ if (!extension_loaded('mysqli')) {
 } else {
     $requirement3 = "<span class='label label-success'>Enabled</span>";
 }
+if (isset($db_error)) {
+    $error = true;
+    $requirement4 = "<span class='label label-danger'>" . $db_error . "</span>";
+} else {
+    $requirement4 = "<span class='label label-success'>Connected</span>";
+}
 if (!extension_loaded('gd')) {
     $error = true;
     $requirement6 = "<span class='label label-danger'>Not enabled</span>";
@@ -86,6 +92,10 @@ if ($error == true) {
         <tr>
             <td>MySQLi PHP Extension</td>
             <td><?php echo $requirement3; ?></td>
+        </tr>
+        <tr>
+            <td>MySQL Connection</td>
+            <td><?php echo $requirement4; ?></td>
         </tr>
         <tr>
             <td>GD PHP Extension</td>

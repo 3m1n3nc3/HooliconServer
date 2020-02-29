@@ -149,11 +149,27 @@
 													<?= form_error('value[paystack_secret]'); ?>
 												</div>  
 
-												<div class="col-md-6 form-group">  
+												<div class="col-md-4 form-group">  
 													<label for="ip_interval">IP Update Interval</label>
 													<input type="text" name="value[ip_interval]" value="<?= (set_value('value[ip_interval]') ? set_value('value[ip_interval]') : $this->my_config->item('ip_interval')); ?>" class="form-control" >
 													<small class="text-muted">The time interval in hours before a user visit can be recorded as unique</small>
 													<?= form_error('value[ip_interval]'); ?>
+												</div> 
+
+												<div class="col-md-4 form-group">  
+													<label for="db_prefix">DB Name Prefix</label>
+													<input type="text" name="value[db_prefix]" value="<?= (set_value('value[db_prefix]') ? set_value('value[db_prefix]') : $this->my_config->item('db_prefix')); ?>" class="form-control" >
+													<small class="text-muted">If database prefixing is enabled on the server, you must prefix this value with the account prefix and an underscore (_).</small>
+													<?= form_error('value[db_prefix]'); ?>
+												</div>  
+
+												<div class="col-md-4 form-group">   
+													<label for="live_site">Site Mode</label>  
+							                        <select id="live_site" name="value[live_site]" class="form-control">
+							                        	<option value="1"<?= set_select('value[live_site]', '1', ($this->my_config->item('live_site') ? TRUE : FALSE)); ?>>Live</option>
+							                        	<option value="0"<?= set_select('value[live_site]', '0', (!$this->my_config->item('live_site') ? TRUE : FALSE)); ?>>Test</option>
+							                        </select>
+													<small class="text-muted">Set this to test if you are on a localhost testing server</small>
 												</div>  									
 
 												<div class="col-md-12 form-group">  
