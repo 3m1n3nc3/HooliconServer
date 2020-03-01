@@ -17,6 +17,9 @@ class Operation extends Admin_Controller {
     public function install($product = '') 
     {   
         $product = $this->school_model->get($product); 
+        if (!$product) {
+            redirect('errors/error_404');
+        }
 
         $user = $this->user_model->get($product['user_id']);
 
@@ -97,9 +100,9 @@ class Operation extends Admin_Controller {
 
             if ($this->error === '' && ($this->input->post('step') && $this->input->post('step') == 2)) 
             {
-                $password = $this->enc_lib->passHashEnc($password);
+                $password_hash = $this->enc_lib->passHashEnc($password);
                 $database = file_get_contents(APPPATH . 'controllers/admin/database.sql');
-                $database = sprintf($database, $product['username'], $product['username'], $user['email'], $password);
+                $database = sprintf($database, $product['username'], $product['username'], $user['email'], $password_hash);
                 if (mysqli_multi_query($link, $database)) {
                     $view_data['page_title'] = 'Installation Complete';
                     $view_data['passed_steps'][1] = true;
@@ -111,7 +114,7 @@ class Operation extends Admin_Controller {
                     $db_created = 1;
                 }
                 if (isset($db_created)) {
-                    $pass = array('default_password' => $view_data['password'], 'installed' => 1);
+                    $pass = array('default_password' => $password, 'installed' => 1);
                     $this->db->where('id', $product['id']);
                     $this->db->update('school', $pass);
                 }
