@@ -68,16 +68,16 @@ class Product extends User_Controller {
 
     public function payment($product = null, $plan = null, $action = null) 
     {    
-
         $data = $this->account; 
         $data['fullname'] = $data['name']; 
         $data['page_title'] = 'checkout'; 
-        $ref = $this->session->userdata('payment')['ref'];
  
         if (!isset($_SESSION['payment']['ref'])) 
         {
             $this->session->set_userdata(['payment' => ['ref' => $this->genref]]);
         } 
+
+        $ref = $this->session->userdata('payment')['ref'];
 
         $data['product'] = $this->product_model->get($product);
         $data['plan'] = $this->product_model->get_plan($plan); 
