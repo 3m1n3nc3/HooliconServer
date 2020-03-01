@@ -118,9 +118,6 @@ class Operation extends Admin_Controller {
                     $view_data['passed_steps'][2] = true;
                     $view_data['passed_steps'][3] = true;
                     $view_data['step'] = 3;
-
-                    if (isset($_SESSION['step'])) $this->session->unset_userdata('step'); 
-                    if (isset($_SESSION['password'])) $this->session->unset_userdata('password'); 
                 }
 
                 if ($this->input->post('admin_password')) 
@@ -202,6 +199,9 @@ class Operation extends Admin_Controller {
         $view_data['passed_steps'][3] = true;
         $view_data['passed_steps'][4] = true;
         $view_data['step'] = 4;
+
+        if (isset($_SESSION['step'])) $this->session->unset_userdata('step'); 
+        if (isset($_SESSION['password'])) $this->session->unset_userdata('password'); 
 
         if ($this->input->post('step') && $this->input->post('step') == 4) 
         {
