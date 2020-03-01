@@ -98,26 +98,39 @@ class Operation extends Admin_Controller {
                 $view_data['step'] = 2;
             }
 
-            if ($this->error === '' && ($this->input->post('step') && $this->input->post('step') == 2)) 
+            if ($this->error === '' && $this->input->post('step') == 2) 
             {
-                $admin_password = $this->input->post('admin_password');
-                $password_hash = $this->enc_lib->passHashEnc($admin_password);
-                $database = file_get_contents(APPPATH . 'controllers/admin/database.sql');
-                $database = sprintf($database, $product['username'], $product['username'], $user['email'], $password_hash);
-                if (mysqli_multi_query($link, $database)) {
-                    $view_data['page_title'] = 'Installation Complete';
-                    $view_data['passed_steps'][1] = true;
-                    $view_data['passed_steps'][2] = true;
-                    $view_data['passed_steps'][3] = true;
-                    $view_data['step'] = 3;
-                    $this->clean_up_db_query($link);
-                    mysqli_close($link);  
-                    $db_created = 1;
-                }
-                if (isset($db_created)) {
-                    $upd_data = array('default_password' => $admin_password, 'installed' => 1);
-                    $this->db->where('id', $product['id']);
-                    $this->db->update('school', $upd_data);
+                if ($this->input->post('admin_password')) 
+                { 
+                    $this->form_validation->set_rules('admin_password', 'Password', 'trim|required|xss_clean|matches[admin_passwordr]');
+                    $this->form_validation->set_rules('admin_passwordr', 'Confirm password', 'trim|required|xss_clean');
+
+                    if ($this->form_validation->run() !== FALSE) 
+                    { 
+                        $admin_password = $this->input->post('admin_password');
+
+                        $password_hash = $this->enc_lib->passHashEnc($admin_password);
+                        $database = file_get_contents(APPPATH . 'controllers/admin/database.sql');
+                        $database = sprintf($database, $product['username'], $product['username'], $user['email'], $password_hash);
+
+                        if (mysqli_multi_query($link, $database)) 
+                        {
+                            $view_data['page_title'] = 'Installation Complete';
+                            $view_data['passed_steps'][1] = true;
+                            $view_data['passed_steps'][2] = true;
+                            $view_data['passed_steps'][3] = true;
+                            $view_data['step'] = 3;
+                            $this->clean_up_db_query($link);
+                            mysqli_close($link);  
+                            $db_created = 1;
+                        }
+                        if (isset($db_created)) 
+                        {
+                            $upd_data = array('default_password' => $admin_password, 'installed' => 1);
+                            $this->db->where('id', $product['id']);
+                            $this->db->update('school', $upd_data);
+                        }
+                    }
                 }
             } else {
                 $view_data['error'] = $this->error;
