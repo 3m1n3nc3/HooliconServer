@@ -36,7 +36,7 @@ class Operation extends Admin_Controller {
 
             $args = array('name' => $db_data);
 
-            // Check if the database exists
+            // Check if the database does not exists
             if (!$this->cpanel->mysql($args, 'check_database')) 
             {
                 // Create a new database
@@ -158,34 +158,35 @@ class Operation extends Admin_Controller {
         $view_data['passed_steps'][4] = true;
         $view_data['step'] = 4;
 
-        if ($this->input->post('domain') && $view_data['status'] == 0) 
-        { 
-            $gen_email = $this->input->post('gen_email'); // 1 / 0 / NULL
-            $propagate_domain = $this->prop_domain($product, $gen_email);
-
-            if ($propagate_domain['set_error']) 
-            {
-                $view_data['error'] = $propagate_domain['error']; 
-            } 
-
-            if ($view_data['error']) 
-            {
-                $view_data['error'][] .= 'Error: You can not fix this errors from here, you will have to update the product data and fix the errors manually from your admin dashboard.';
-            }
-        } 
-        elseif ($this->input->post('step') && $this->input->post('step') == 4) 
+        if ($this->input->post('step') && $this->input->post('step') == 4) 
         {
             $view_data['page_title'] = 'Installation Complete';
             $view_data['step'] = 5;
+            
+            if ($this->input->post('domain') && $view_data['status'] == 0) 
+            { 
+                $gen_email = $this->input->post('gen_email'); // 1 / 0 / NULL
+                $propagate_domain = $this->prop_domain($product, $gen_email);
+
+                if ($propagate_domain['set_error']) 
+                {
+                    $view_data['error'] = $propagate_domain['error']; 
+                } 
+
+                if ($view_data['error']) 
+                {
+                    $view_data['error'][] .= 'Error: You can not fix this errors from here, you will have to update the product data and fix the errors manually from your admin dashboard.';
+                }
+            } 
         } 
         elseif ($this->input->post('step') && $this->input->post('step') == 5) 
         {
-            $view_data['step'] = 5;
             $view_data['passed_steps'][1] = true;
             $view_data['passed_steps'][2] = true;
             $view_data['passed_steps'][3] = true;
             $view_data['passed_steps'][4] = true;
             $view_data['passed_steps'][5] = true;
+            $view_data['step'] = 5;
         }
 
         $this->load->view('admin/install/install', $view_data);  
