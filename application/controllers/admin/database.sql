@@ -2165,7 +2165,7 @@ CREATE TABLE `staff` (
 --
 
 INSERT INTO `staff` (`id`, `name`, `email`, `password`, `is_active`) VALUES
-(1, 'Super Admin', '%s', '%s', 1);
+('1', 'Super Admin', '%s', '%s', '1');
 
 -- --------------------------------------------------------
 
@@ -2312,7 +2312,7 @@ CREATE TABLE `staff_roles` (
 -- Dumping data for table `staff_roles`
 --
 
-INSERT INTO `staff_roles` (`id`, `staff_id`, `role_id`) VALUES (1, 1, 7);
+INSERT INTO `staff_roles` (`id`, `staff_id`, `role_id`) VALUES ('1', '1', '7');
 
 -- --------------------------------------------------------
 

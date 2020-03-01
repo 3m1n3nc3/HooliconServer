@@ -17,7 +17,9 @@ class Operation extends Admin_Controller {
     public function install($product = '') 
     {   
         $product = $this->school_model->get($product); 
-        if (!$product) {
+
+        if (!$product) 
+        {
             redirect('errors/error_404');
         }
 
@@ -27,17 +29,25 @@ class Operation extends Admin_Controller {
         $view_data['site_url'] = $product['site_url'];
         $view_data['site_username'] = $product['username'];
 
+        // Generate a random charactered random password
         $password = $this->enc_lib->get_random_password(10, 10, true, true, true);
 
-        $view_data['password'] = $password;
+        // Commit the generated password to a session
+        if (!isset($_SESSION['password'])) 
+        {
+            $this->session->set_userdata('password', $password);
+        }
+
+        // Parse the password session to the view
+        $view_data['password'] = $this->session->userdata('password');
 
         // Check if this is a test site
-        $db_data = '';
-        if ($this->my_config->item('live_site')) 
+        $db_name = '';
+        if (!$this->my_config->item('live_site')) 
         {
-            $db_data = $this->my_config->item('db_prefix') . $product['username'];
+            $db_name = $this->my_config->item('db_prefix') . $product['username'];
 
-            $args = array('name' => $db_data);
+            $args = array('name' => $db_name);
 
             // Check if the database does not exists
             if (!$this->cpanel->mysql($args, 'check_database')) 
@@ -48,7 +58,7 @@ class Operation extends Admin_Controller {
                 // Set the users privileges on the new table
                 $prevl = array(
                     'user' => $this->db->username, 
-                    'database' => $db_data,
+                    'database' => $db_name,
                     'privileges' => 'ALL PRIVILEGES'
                 );
 
@@ -56,7 +66,7 @@ class Operation extends Admin_Controller {
             }
 
             // Start the MySQLi Connection            
-            $link = @mysqli_connect($this->db->hostname, $this->db->username, $this->db->password, $db_data);
+            $link = @mysqli_connect($this->db->hostname, $this->db->username, $this->db->password, $db_name);
         }
         else
         {
@@ -102,17 +112,15 @@ class Operation extends Admin_Controller {
             if ($this->error === '' && ($this->input->post('step') == 2 || isset($_SESSION['step']))) 
             {
                 if ($this->input->post('step') == 2 || $this->session->userdata('step') == 2)
-                {
+                {   
                     $view_data['page_title'] = 'Database Installation Complete';
                     $view_data['passed_steps'][1] = true;
                     $view_data['passed_steps'][2] = true;
                     $view_data['passed_steps'][3] = true;
                     $view_data['step'] = 3;
 
-                    if (isset($_SESSION['step']))
-                    {
-                        $this->session->unset_userdata('step');
-                    }
+                    if (isset($_SESSION['step'])) $this->session->unset_userdata('step'); 
+                    if (isset($_SESSION['password'])) $this->session->unset_userdata('password'); 
                 }
 
                 if ($this->input->post('admin_password')) 
@@ -128,8 +136,15 @@ class Operation extends Admin_Controller {
                         $admin_password = $this->input->post('admin_password');
 
                         $password_hash = $this->enc_lib->passHashEnc($admin_password);
-                        $database = file_get_contents(APPPATH . 'controllers/admin/database.sql');
-                        $database = sprintf($database, $product['username'], $product['username'], $user['email'], $password_hash);
+                        $query = file_get_contents(APPPATH . 'controllers/admin/database.sql');
+
+                        $insert = array(
+                            $product['username'],
+                            $product['username'],
+                            $user['email'],
+                            $password_hash
+                        );
+                        $database = vsprintf($query, $insert);
 
                         if (mysqli_multi_query($link, $database)) 
                         {

@@ -59,7 +59,7 @@ $autoload['packages'] = array();
 |	$autoload['libraries'] = array('user_agent' => 'ua');
 */
 $autoload['libraries'] = array(
-	'database', 'form_validation', 'session', 'upload', 'pagination', 'Licenser', 'Aes', 'Enc_lib', 'Curler', 
+	'database', 'form_validation', 'session', 'upload', 'pagination', 'Licenser', 'Aes', 'enc_lib', 'Curler', 
 	'Account_Data', 'my_config', 'Creative_lib', 'Ip', 'Intl'
 );
 
