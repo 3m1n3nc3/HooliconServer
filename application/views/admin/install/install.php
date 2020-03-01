@@ -207,7 +207,7 @@
                             ?>
                             <?php if ($step == 2) { ?>
                                 <?php echo form_open($this->uri->uri_string()); ?>
-                                    <?php echo form_hidden('step', 3); ?>
+                                    <?php echo form_hidden('step', $step); ?>
                                     <h3>Super Admin User Details</h3>
                                     <div class="form-group">
                                         <label for="admin_email" class="control-label">Email (Login Username)</label>
@@ -252,7 +252,7 @@
                                         If you are sure of this action, you can proceed
                                     </div>
                                     <?php echo form_open($this->uri->uri_string()); ?>
-                                        <?php echo form_hidden('step', 5); ?>
+                                        <?php echo form_hidden('step', $step); ?>
                                         <?php echo form_hidden('domain', $site_username) ?>
                                         <div class="text-right">
                                             <button type="submit" class="btn btn-primary">Begin Propagation</button>

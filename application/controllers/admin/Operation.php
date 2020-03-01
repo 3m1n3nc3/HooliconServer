@@ -88,17 +88,15 @@ class Operation extends Admin_Controller {
         }
         elseif ($product && $this->input->post()) 
         {
-            if ($this->input->post('step') && $this->input->post('step') == 2) {
+            if ($this->input->post('requirements_success') || ($this->input->post('step') && $this->input->post('step') == 2)) {
                 $view_data['page_title'] = 'Database Installation';
                 $view_data['passed_steps'][1] = true;
                 $view_data['passed_steps'][2] = true;
                 $view_data['step'] = 2;
-            } else if ($this->input->post('requirements_success')) {
-                $view_data['page_title'] = 'Database Installation';
-                $view_data['step'] = 2;
-                $view_data['passed_steps'][1] = true;
             }
-            if ($this->error === '' && $this->input->post('step') && $this->input->post('step') == 2) {
+
+            if ($this->error === '' && ($this->input->post('step') && $this->input->post('step') == 2)) 
+            {
                 $password = $this->enc_lib->passHashEnc($password);
                 $database = file_get_contents(APPPATH . 'controllers/admin/database.sql');
                 $database = sprintf($database, $product['username'], $product['username'], $user['email'], $password);
