@@ -102,6 +102,7 @@ class Operation extends Admin_Controller {
             {
                 if ($this->input->post('admin_password')) 
                 { 
+                    $this->form_validation->set_error_delimiters($prefix = '<div class="text-danger"><small>', $suffix = '</small></div>')
                     $this->form_validation->set_rules('admin_password', 'Password', 'trim|required|matches[admin_passwordr]');
                     $this->form_validation->set_rules('admin_passwordr', 'Confirm password', 'trim|required');
 
