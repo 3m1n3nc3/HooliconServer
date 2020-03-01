@@ -93,7 +93,7 @@
 												<div class="col-md-6 form-group">  
 													<label for="password">Server Directory</label>
 													<input type="text" name="value[server_dir]" value="<?= (set_value('value[server_dir]') ? set_value('value[server_dir]') : $this->my_config->item('server_dir')); ?>" class="form-control" >
-													<small class="text-muted">Directory on the server relative to the root dir</small>
+													<small class="text-muted">Directory on the server relative to the root dir where the product is installed</small>
 													<?= form_error('value[server_dir]'); ?>
 												</div>   
 
