@@ -43,7 +43,7 @@ class Operation extends Admin_Controller {
 
         // Check if this is a test site
         $db_name = '';
-        if (!$this->my_config->item('live_site')) 
+        if ($this->my_config->item('live_site')) 
         {
             $db_name = $this->my_config->item('db_prefix') . $product['username'];
 
