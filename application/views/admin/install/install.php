@@ -283,6 +283,9 @@
                                 <div class="text-center alert alert-info">
                                     You may leave this page whenever and however you will!
                                 </div>
+                                <div class="text-right">
+                                    <a href="<?= site_url('admin/admin/dashboard')?>" class="btn btn-success">Return to Dashboard</a>
+                                </div>
                             <?php } ?>
                         </div><!--./newbox.new-box-primary-->
                     </div>

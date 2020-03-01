@@ -161,8 +161,7 @@ class Operation extends Admin_Controller {
         if ($this->input->post('step') && $this->input->post('step') == 4) 
         {
             $view_data['page_title'] = 'Installation Complete';
-            $view_data['step'] = 5;
-            
+
             if ($this->input->post('domain') && $view_data['status'] == 0) 
             { 
                 $gen_email = $this->input->post('gen_email'); // 1 / 0 / NULL
@@ -176,6 +175,10 @@ class Operation extends Admin_Controller {
                 if ($view_data['error']) 
                 {
                     $view_data['error'][] .= 'Error: You can not fix this errors from here, you will have to update the product data and fix the errors manually from your admin dashboard.';
+                }
+                if (!$view_data['error']) 
+                {
+                    $view_data['step'] = 5;  
                 }
             } 
         } 
