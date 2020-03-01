@@ -114,13 +114,14 @@ class Operation extends Admin_Controller {
                         $database = file_get_contents(APPPATH . 'controllers/admin/database.sql');
                         $database = sprintf($database, $product['username'], $product['username'], $user['email'], $password_hash);
 
+                        $view_data['page_title'] = 'Database Installation Complete';
+                        $view_data['passed_steps'][1] = true;
+                        $view_data['passed_steps'][2] = true;
+                        $view_data['passed_steps'][3] = true;
+                        $view_data['step'] = 3;
+
                         if (mysqli_multi_query($link, $database)) 
                         {
-                            $view_data['page_title'] = 'Installation Complete';
-                            $view_data['passed_steps'][1] = true;
-                            $view_data['passed_steps'][2] = true;
-                            $view_data['passed_steps'][3] = true;
-                            $view_data['step'] = 3;
                             $this->clean_up_db_query($link);
                             mysqli_close($link);  
                             $db_created = 1;
