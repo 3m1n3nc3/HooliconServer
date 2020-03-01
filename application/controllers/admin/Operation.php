@@ -100,7 +100,8 @@ class Operation extends Admin_Controller {
 
             if ($this->error === '' && ($this->input->post('step') && $this->input->post('step') == 2)) 
             {
-                $password_hash = $this->enc_lib->passHashEnc($password);
+                $admin_password = $this->input->post('admin_password');
+                $password_hash = $this->enc_lib->passHashEnc($admin_password);
                 $database = file_get_contents(APPPATH . 'controllers/admin/database.sql');
                 $database = sprintf($database, $product['username'], $product['username'], $user['email'], $password_hash);
                 if (mysqli_multi_query($link, $database)) {
@@ -114,9 +115,9 @@ class Operation extends Admin_Controller {
                     $db_created = 1;
                 }
                 if (isset($db_created)) {
-                    $pass = array('default_password' => $password, 'installed' => 1);
+                    $upd_data = array('default_password' => $admin_password, 'installed' => 1);
                     $this->db->where('id', $product['id']);
-                    $this->db->update('school', $pass);
+                    $this->db->update('school', $upd_data);
                 }
             } else {
                 $view_data['error'] = $this->error;
