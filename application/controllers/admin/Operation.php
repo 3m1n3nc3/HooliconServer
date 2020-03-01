@@ -29,12 +29,12 @@ class Operation extends Admin_Controller {
         $view_data['password'] = $password;
 
         // Check if this is a test site
-        $database = '';
+        $db_data = '';
         if ($this->my_config->item('live_site')) 
         {
-            $database = $this->my_config->item('db_prefix') . $product['username'];
+            $db_data = $this->my_config->item('db_prefix') . $product['username'];
 
-            $args = array('name' => $database);
+            $args = array('name' => $db_data);
 
             // Check if the database exists
             if (!$this->cpanel->mysql($args, 'check_database')) 
@@ -45,7 +45,7 @@ class Operation extends Admin_Controller {
                 // Set the users privileges on the new table
                 $prevl = array(
                     'user' => $this->db->username, 
-                    'database' => $database,
+                    'database' => $db_data,
                     'privileges' => 'ALL PRIVILEGES'
                 );
 
@@ -53,7 +53,7 @@ class Operation extends Admin_Controller {
             }
 
             // Start the MySQLi Connection            
-            $link = @mysqli_connect($this->db->hostname, $this->db->username, $this->db->password, $database);
+            $link = @mysqli_connect($this->db->hostname, $this->db->username, $this->db->password, $db_data);
         }
         else
         {
@@ -76,7 +76,7 @@ class Operation extends Admin_Controller {
         );
 
         if (!$link) {
-            $this->error .= "Error: Unable to connect to MySQL Database '" . $database . "'." . PHP_EOL;
+            $this->error .= "Error: Unable to connect to MySQL Database '" . $db_data . "'." . PHP_EOL;
             $view_data['db_error'] = $this->error;
         } else {
             $view_data['debug'] .= "Success: Connection to " . $this->input->post('database') . " database is done successfully."; 
@@ -390,5 +390,4 @@ class Operation extends Admin_Controller {
         redirect('access/login/admin');       
 
     }
-
 }

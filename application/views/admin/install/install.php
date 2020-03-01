@@ -207,27 +207,27 @@
                             ?>
                             <?php if ($step == 2) { ?>
                                 <?php echo form_open($this->uri->uri_string()); ?>
-                                <?php echo form_hidden('step', $step); ?>
-                                <h3>Super Admin User Details</h3>
-                                <div class="form-group">
-                                    <label for="admin_email" class="control-label">Email (Login Username)</label>
-                                    <input type="email" class="form-control" name="admin_email" id="admin_email" value="<?php echo $username; ?>">
-                                </div>
-                                <div class="form-group">
-                                    <label for="admin_password" class="control-label">Password</label>
+                                    <?php echo form_hidden('step', 3); ?>
+                                    <h3>Super Admin User Details</h3>
+                                    <div class="form-group">
+                                        <label for="admin_email" class="control-label">Email (Login Username)</label>
+                                        <input type="email" class="form-control" name="admin_email" id="admin_email" value="<?php echo $username; ?>">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="admin_password" class="control-label">Password</label>
 
-                                    <input type="password" class="form-control" name="admin_password" id="admin_password" value="<?php echo $password; ?>">
-                                </div>
-                                <div class="form-group">
-                                    <label for="admin_passwordr" class="control-label">Confirm Password</label>
-                                    <input type="password" class="form-control" name="admin_passwordr" id="admin_passwordr" value="<?php echo $password; ?>">
-                                </div>
-                                <div class="text-center alert alert-info">
-                                    These values are known to the user, and you may not need to change them!
-                                </div>
-                                <div class="text-right">
-                                    <button type="submit" class="btn btn-primary">Begin Install</button>
-                                </div>
+                                        <input type="password" class="form-control" name="admin_password" id="admin_password" value="<?php echo $password; ?>">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="admin_passwordr" class="control-label">Confirm Password</label>
+                                        <input type="password" class="form-control" name="admin_passwordr" id="admin_passwordr" value="<?php echo $password; ?>">
+                                    </div>
+                                    <div class="text-center alert alert-info">
+                                        These values are known to the user, and you may not need to change them!
+                                    </div>
+                                    <div class="text-right">
+                                        <button type="submit" class="btn btn-primary">Begin Install</button>
+                                    </div>
                                 <?php echo form_close(); ?>
                             <?php } else if ($step == 3) { ?>
                                 <h4 class="bold">Installation Successful!</h4>
@@ -252,7 +252,7 @@
                                         If you are sure of this action, you can proceed
                                     </div>
                                     <?php echo form_open($this->uri->uri_string()); ?>
-                                        <?php echo form_hidden('step', $step); ?>
+                                        <?php echo form_hidden('step', 5); ?>
                                         <?php echo form_hidden('domain', $site_username) ?>
                                         <div class="text-right">
                                             <button type="submit" class="btn btn-primary">Begin Propagation</button>
