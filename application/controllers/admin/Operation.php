@@ -89,17 +89,32 @@ class Operation extends Admin_Controller {
         {
             $view_data['step'] = 1;
         }
-        elseif ($product && $this->input->post()) 
+        elseif ($product && ($this->input->post() || isset($_SESSION['step']))) 
         {
-            if ($this->input->post('requirements_success') || ($this->input->post('step') && $this->input->post('step') == 2)) {
+            if ($this->input->post('requirements_success') || ($this->input->post('step') && $this->input->post('step') == 2)) 
+            {
                 $view_data['page_title'] = 'Database Installation';
                 $view_data['passed_steps'][1] = true;
                 $view_data['passed_steps'][2] = true;
                 $view_data['step'] = 2;
             }
 
-            if ($this->error === '' && $this->input->post('step') == 2) 
+            if ($this->error === '' && ($this->input->post('step') == 2 || isset($_SESSION['step']))) 
             {
+                if ($this->input->post('step') == 2 || $this->session->userdata('step') == 2)
+                {
+                    $view_data['page_title'] = 'Database Installation Complete';
+                    $view_data['passed_steps'][1] = true;
+                    $view_data['passed_steps'][2] = true;
+                    $view_data['passed_steps'][3] = true;
+                    $view_data['step'] = 3;
+
+                    if (isset($_SESSION['step']))
+                    {
+                        $this->session->unset_userdata('step');
+                    }
+                }
+
                 if ($this->input->post('admin_password')) 
                 { 
                     $this->form_validation->set_error_delimiters($prefix = '<div class="text-danger"><small>', $suffix = '</small></div>');
@@ -108,17 +123,13 @@ class Operation extends Admin_Controller {
 
                     if ($this->form_validation->run() !== FALSE) 
                     { 
+                        $this->session->set_userdata('step', $this->input->post('step'));
+
                         $admin_password = $this->input->post('admin_password');
 
                         $password_hash = $this->enc_lib->passHashEnc($admin_password);
                         $database = file_get_contents(APPPATH . 'controllers/admin/database.sql');
                         $database = sprintf($database, $product['username'], $product['username'], $user['email'], $password_hash);
-
-                        $view_data['page_title'] = 'Database Installation Complete';
-                        $view_data['passed_steps'][1] = true;
-                        $view_data['passed_steps'][2] = true;
-                        $view_data['passed_steps'][3] = true;
-                        $view_data['step'] = 3;
 
                         if (mysqli_multi_query($link, $database)) 
                         {
