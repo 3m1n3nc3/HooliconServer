@@ -28,7 +28,7 @@ class Operation extends Admin_Controller {
         $view_data['username'] = @$user['email'];
         $view_data['site_url'] = $product['site_url'];
         $view_data['site_username'] = $product['username'];
-
+ 
         // Generate a random charactered random password
         $password = $this->enc_lib->get_random_password(10, 10, true, true, true);
 
@@ -89,7 +89,7 @@ class Operation extends Admin_Controller {
         );
 
         if (!$link) {
-            $this->error .= "Error: Unable to connect to MySQL Database '" . $db_data . "'." . PHP_EOL;
+            $this->error .= "Error: Unable to connect to MySQL Database '" . $db_name . "'." . PHP_EOL;
             $view_data['db_error'] = $this->error;
         } else {
             $view_data['debug'] .= "Success: Connection to " . $this->input->post('database') . " database is done successfully."; 
@@ -110,19 +110,10 @@ class Operation extends Admin_Controller {
             }
 
             if ($this->error === '' && ($this->input->post('step') == 2 || isset($_SESSION['step']))) 
-            {
-                if ($this->input->post('step') == 2 || $this->session->userdata('step') == 2)
-                {   
-                    $view_data['page_title'] = 'Database Installation Complete';
-                    $view_data['passed_steps'][1] = true;
-                    $view_data['passed_steps'][2] = true;
-                    $view_data['passed_steps'][3] = true;
-                    $view_data['step'] = 3;
-                }
-
+            { 
                 if ($this->input->post('admin_password')) 
                 { 
-                    $this->form_validation->set_error_delimiters($prefix = '<div class="text-danger"><small>', $suffix = '</small></div>');
+                    $this->form_validation->set_error_delimiters('<div class="text-danger"><small>', '</small></div>');
                     $this->form_validation->set_rules('admin_password', 'Password', 'trim|required|matches[admin_passwordr]');
                     $this->form_validation->set_rules('admin_passwordr', 'Confirm password', 'trim|required');
 
@@ -130,7 +121,7 @@ class Operation extends Admin_Controller {
                     { 
                         $this->session->set_userdata('step', $this->input->post('step'));
 
-                        $admin_password = $this->input->post('admin_password');
+                        $admin_password = 'friends';//$this->input->post('admin_password');
 
                         $password_hash = $this->enc_lib->passHashEnc($admin_password);
                         $query = file_get_contents(APPPATH . 'controllers/admin/database.sql');
@@ -155,8 +146,21 @@ class Operation extends Admin_Controller {
                             $this->db->where('id', $product['id']);
                             $this->db->update('school', $upd_data);
                         }
+
+                        // sleep for 120 seconds
+                        // sleep(120);
                     }
                 }
+
+                if ($this->input->post('step') == 2 || $this->session->userdata('step') == 2)
+                {   
+                    $view_data['page_title'] = 'Database Installation Complete';
+                    $view_data['passed_steps'][1] = true;
+                    $view_data['passed_steps'][2] = true;
+                    $view_data['passed_steps'][3] = true;
+                    $view_data['step'] = 3;
+                }
+
             } else {
                 $view_data['error'] = $this->error;
             }
