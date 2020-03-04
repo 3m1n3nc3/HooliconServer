@@ -215,15 +215,15 @@ class Operation extends Admin_Controller {
             // if ($this->form_validation->run() !== FALSE) 
             if (!$this->input->post('admin_password')) 
             {
-                echo json_encode(array('status' => '0', 'msg' => 'Password is required'));
+                echo json_encode(array('status' => '0', 'msg' => 'Password is required'), JSON_FORCE_OBJECT);
             }
             elseif (!$this->input->post('admin_passwordr')) 
             {
-                echo json_encode(array('status' => '0', 'msg' => 'Confirm Password is required'));
+                echo json_encode(array('status' => '0', 'msg' => 'Confirm Password is required'), JSON_FORCE_OBJECT);
             }
-            elseif ($this->input->post('admin_password') !== $this->input->post('admin_passwordr')) 
+            elseif ($this->input->post('admin_password') !== $this->input->post('admin_passwordr'), JSON_FORCE_OBJECT) 
             {
-                echo json_encode(array('status' => '0', 'msg' => 'Password and Confirm Password do not match'));
+                echo json_encode(array('status' => '0', 'msg' => 'Password and Confirm Password do not match'), JSON_FORCE_OBJECT);
             }
             else
             {  
@@ -256,24 +256,24 @@ class Operation extends Admin_Controller {
                     $upd_data = array('default_password' => $admin_password, 'installed' => 1);
                     $this->db->where('id', $product['id']);
                     $this->db->update('school', $upd_data);
-                    echo json_encode(array('status' => '1', 'msg' => 'Database Successfully installed'));
+                    echo json_encode(array('status' => '1', 'msg' => 'Database Successfully installed'), JSON_FORCE_OBJECT);
                 } 
                 else 
                 {
                     // Installation error
-                    echo json_encode(array('status' => '0', 'msg' => 'Unable to install Database'));
+                    echo json_encode(array('status' => '0', 'msg' => 'Unable to install Database'), JSON_FORCE_OBJECT);
                 }
             }
             // else
             // { 
             //     // Password and inout error
-            //     echo json_encode(array('status' => '0', 'msg' => validation_errors('<div class="text-danger"><small>', '</small></div>')));
+            //     echo json_encode(array('status' => '0', 'msg' => validation_errors('<div class="text-danger"><small>', '</small></div>')), JSON_FORCE_OBJECT);
             // }
         }
         else
         {echo 'string1111';
             // Unknown product error
-            echo json_encode(array('status' => '0', 'msg' => 'Unknown Product'));
+            echo json_encode(array('status' => '0', 'msg' => 'Unknown Product'), JSON_FORCE_OBJECT);
         }
     }
 
