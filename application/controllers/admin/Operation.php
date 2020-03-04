@@ -207,7 +207,7 @@ class Operation extends Admin_Controller {
 
             // Start the MySQLi Connection            
             $link = @mysqli_connect($this->db->hostname, $this->db->username, $this->db->password, $db_name);
-
+print_r($_POST);
             // Validate the received input 
             if (!$this->input->post('admin_password')) 
             {  
