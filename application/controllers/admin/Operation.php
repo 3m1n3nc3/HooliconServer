@@ -14,7 +14,7 @@ class Operation extends Admin_Controller {
 
     } 
 
-    public function install($product = '') 
+    public function install($product = '', $set_step = NULL) 
     {   
         $product = $this->school_model->get($product); 
 
@@ -99,9 +99,10 @@ class Operation extends Admin_Controller {
         {
             $view_data['step'] = 1;
         }
-        elseif ($product && ($this->input->post() || isset($_SESSION['step']))) 
+        
+        if ($product && ($this->input->post() || isset($_SESSION['step']) || $set_step)) 
         {
-            if ($this->input->post('requirements_success') || ($this->input->post('step') && $this->input->post('step') == 2)) 
+            if ($this->input->post('requirements_success') || $this->input->post('step') == 2)
             {
                 $view_data['page_title'] = 'Database Installation';
                 $view_data['passed_steps'][1] = true;
@@ -109,7 +110,7 @@ class Operation extends Admin_Controller {
                 $view_data['step'] = 2;
             }
 
-            if ($this->error === '' && ($this->input->post('step') == 2 || isset($_SESSION['step']))) 
+            if ($this->error === '' && ($this->input->post('step') == 2 || isset($_SESSION['step']) || $set_step == 2)) 
             { 
                 if ($this->input->post('admin_password')) 
                 { 
@@ -152,13 +153,16 @@ class Operation extends Admin_Controller {
                     }
                 }
 
-                if ($this->input->post('step') == 2 || $this->session->userdata('step') == 2)
+                if ($this->input->post('step') == 2 || $this->session->userdata('step') == 2 || $set_step == 2)
                 {   
                     $view_data['page_title'] = 'Database Installation Complete';
                     $view_data['passed_steps'][1] = true;
                     $view_data['passed_steps'][2] = true;
                     $view_data['passed_steps'][3] = true;
                     $view_data['step'] = 3;
+
+                    if (isset($_SESSION['step'])) $this->session->unset_userdata('step'); 
+                    if (isset($_SESSION['password'])) $this->session->unset_userdata('password'); 
                 }
 
             } else {
@@ -203,9 +207,6 @@ class Operation extends Admin_Controller {
         $view_data['passed_steps'][3] = true;
         $view_data['passed_steps'][4] = true;
         $view_data['step'] = 4;
-
-        if (isset($_SESSION['step'])) $this->session->unset_userdata('step'); 
-        if (isset($_SESSION['password'])) $this->session->unset_userdata('password'); 
 
         if ($this->input->post('step') && $this->input->post('step') == 4) 
         {
