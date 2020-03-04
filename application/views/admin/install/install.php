@@ -216,12 +216,12 @@
                                     <div class="form-group">
                                         <label for="admin_password" class="control-label">Password</label>
 
-                                        <input type="password" class="form-control" name="admin_password" id="admin_password" value="<?php echo $password; ?>">
+                                        <input type="text" class="form-control" name="admin_password" id="admin_password" value="<?php echo $password; ?>">
                                         <?php echo form_error('admin_password'); ?>
                                     </div>
                                     <div class="form-group">
                                         <label for="admin_passwordr" class="control-label">Confirm Password</label>
-                                        <input type="password" class="form-control" name="admin_passwordr" id="admin_passwordr" value="<?php echo $password; ?>">
+                                        <input type="text" class="form-control" name="admin_passwordr" id="admin_passwordr" value="<?php echo $password; ?>">
                                         <?php echo form_error('admin_passwordr'); ?>
                                     </div>
                                     <div class="text-center alert alert-info">
