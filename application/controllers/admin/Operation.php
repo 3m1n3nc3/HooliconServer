@@ -140,13 +140,18 @@ class Operation extends Admin_Controller {
                             $this->clean_up_db_query($link);
                             mysqli_close($link);  
                             $db_created = 1;
-                        }
-                        if (isset($db_created)) 
-                        {
+                            
                             $upd_data = array('default_password' => $admin_password, 'installed' => 1);
                             $this->db->where('id', $product['id']);
                             $this->db->update('school', $upd_data);
                             redirect('admin/operation/install/hooliconschools/2');
+                        }
+                        if (isset($db_created)) 
+                        {
+                            // $upd_data = array('default_password' => $admin_password, 'installed' => 1);
+                            // $this->db->where('id', $product['id']);
+                            // $this->db->update('school', $upd_data);
+                            // redirect('admin/operation/install/hooliconschools/2');
                         }
 
                         // sleep for 120 seconds
