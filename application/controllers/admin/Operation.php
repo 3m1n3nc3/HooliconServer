@@ -177,6 +177,93 @@ class Operation extends Admin_Controller {
         $this->load->view('admin/install/install', $view_data);   
     } 
 
+    public function database_installer($product = '') 
+    {
+        $product = $this->school_model->get($product); 
+        $user = $this->user_model->get($product['user_id']);
+
+        $db_name = '';
+        if ($product) 
+        {
+            $db_name = $this->my_config->item('db_prefix') . $product['username'];
+
+            $args = array('name' => $db_name);
+
+            // Check if the database does not exists
+            if (!$this->cpanel->mysql($args, 'check_database')) 
+            {
+                // Create a new database
+                $this->cpanel->mysql($args, 'create_database');
+
+                // Set the users privileges on the new table
+                $prevl = array(
+                    'user' => $this->db->username, 
+                    'database' => $db_name,
+                    'privileges' => 'ALL PRIVILEGES'
+                );
+
+                $this->cpanel->mysql($prevl, 'set_privileges_on_database');
+            }
+
+            // Start the MySQLi Connection            
+            $link = @mysqli_connect($this->db->hostname, $this->db->username, $this->db->password, $db_name);
+
+            // Validate the received input
+            $this->form_validation->set_rules('admin_password', 'Password', 'trim|required|matches[admin_passwordr]');
+            $this->form_validation->set_rules('admin_passwordr', 'Confirm password', 'trim|required');
+
+            if ($this->form_validation->run() !== FALSE) 
+            {  
+                $admin_password = $this->input->post('admin_password');
+
+                // Encode the password
+                $password_hash = $this->enc_lib->passHashEnc($admin_password);
+                $query = file_get_contents(APPPATH . 'controllers/admin/database.sql');
+
+                $insert = array(
+                    $product['username'],
+                    $product['username'],
+                    $user['email'],
+                    $password_hash
+                );
+                $database = vsprintf($query, $insert);
+                // $db_created = 1;
+
+                // Run the database query
+                if (mysqli_multi_query($link, $database)) 
+                {
+                    $this->clean_up_db_query($link);
+                    mysqli_close($link);  
+                    $db_created = 1;
+                } 
+                
+                // Update the installation status
+                if (isset($db_created)) 
+                {
+                    $upd_data = array('default_password' => $admin_password, 'installed' => 1);
+                    $this->db->where('id', $product['id']);
+                    $this->db->update('school', $upd_data);
+                    echo json_encode(array('status' => '1', 'msg' => 'Database Successfully installed'));
+                } 
+                else 
+                {
+                    // Installation error
+                    echo json_encode(array('status' => '0', 'msg' => 'Unable to install Database'));
+                }
+            }
+            else
+            {
+                // Password and inout error
+                echo json_encode(array('status' => '0', 'msg' => validation_errors('<div class="text-danger"><small>', '</small></div>')));
+            }
+        }
+        else
+        {
+            // Unknown product error
+            echo json_encode(array('status' => '0', 'msg' => 'Unknown Product'));
+        }
+    }
+
     public function propagate_domain($product = '') 
     {  
 

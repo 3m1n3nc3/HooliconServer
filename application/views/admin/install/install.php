@@ -185,6 +185,8 @@
                     </div><!--./col-md-3-->
                     <div class="col-md-9 col-sm-9">
                         <div class="newbox new-box-primary">
+                            <div id="js_message"></div>
+
                             <p><?php echo $debug; ?></p>
                             <?php if (isset($error) && $error != '') { ?>
                                 <?php if (is_array($error)): ?>
@@ -228,7 +230,7 @@
                                         These values are known to the user, and you may not need to change them!
                                     </div>
                                     <div class="text-right">
-                                        <button type="submit" class="btn btn-primary">Begin Install</button>
+                                        <button type="button" onclick="db_installer()" class="btn btn-primary">Begin Install</button>
                                     </div>
                                 <?php echo form_close(); ?>
                             <?php } else if ($step == 3) { ?>
@@ -294,5 +296,41 @@
                 </div><!--./col-md-12-->
             </div><!--./row-->
         </div><!--./container-->
+        
+        <!-- Installation -->
+        <script type="text/javascript">
+            function db_installer() { 
+                $('#js_message').html('');
+
+                var password = $('input[name="admin_password"]').val();
+                var passwordr = $('input[name="admin_passwordr"]').val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '<?php site_url('admin/operation/database_installer/'.$site_username); ?>',
+                    data: {password: password, passwordr: passwordr},
+                    dataType: 'JSON',
+                    success: function(data) {
+                        if (data.status == 1) {
+                            $('#js_message').html('<div class="alert alert-danger text-left">'+data.msg+'</div>');
+                        } else {
+                            $('#js_message').html('<div class="alert alert-danger text-left">'+data.msg+'</div>');
+                        }
+                    },
+                    error: function(xhr, status, error){
+                        var errorMessage = 'An Error Occurred - ' + xhr.status + ': ' + xhr.statusText + '<br> ' + error;  
+                        $('#js_message').html( 
+                        '<div class="card m-2 text-center">'+
+                            '<div class="card-header p-2">Server Response: </div>'+
+                            '<div class="card-body p-2 text-info">'+
+                                '<div class="card-text font-weight-bold text-danger">'+errorMessage+'</div>'
+                                +xhr.responseText+
+                            '</div>'+
+                        '</div>'
+                        );
+                    }   
+                });
+            }
+        </script>
     </body>
 </html>
