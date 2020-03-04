@@ -212,7 +212,20 @@ class Operation extends Admin_Controller {
             $this->form_validation->set_rules('admin_password', 'Password', 'trim|required|matches[admin_passwordr]');
             $this->form_validation->set_rules('admin_passwordr', 'Confirm password', 'trim|required');
 
-            if ($this->form_validation->run() !== FALSE) 
+            // if ($this->form_validation->run() !== FALSE) 
+            if (!$this->input->post('admin_password')) 
+            {
+                echo json_encode(array('status' => '0', 'msg' => 'Password is required'));
+            }
+            elseif (!$this->input->post('admin_passwordr')) 
+            {
+                echo json_encode(array('status' => '0', 'msg' => 'Confirm Password is required'));
+            }
+            elseif ($this->input->post('admin_password') !== $this->input->post('admin_passwordr')) 
+            {
+                echo json_encode(array('status' => '0', 'msg' => 'Password and Confirm Password do not match'));
+            }
+            else
             {  
                 $admin_password = $this->input->post('admin_password');
 
@@ -246,7 +259,7 @@ class Operation extends Admin_Controller {
                     echo json_encode(array('status' => '1', 'msg' => 'Database Successfully installed'));
                 } 
                 else 
-                {echo 'string11113';
+                {
                     // Installation error
                     echo json_encode(array('status' => '0', 'msg' => 'Unable to install Database'));
                 }
