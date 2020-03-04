@@ -215,7 +215,7 @@ class Operation extends Admin_Controller {
             // if ($this->form_validation->run() !== FALSE) 
             if (!$this->input->post('admin_password')) 
             {
-                echo json_encode(array('status' => '0', 'msg' => 'Password is required'), JSON_FORCE_OBJECT);
+                echo json_encode(array('status' => '0', 'msg' => 'Password is required'), JSON_FORCE_OBJECT); 
             }
             elseif (!$this->input->post('admin_passwordr')) 
             {
