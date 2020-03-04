@@ -39,7 +39,7 @@ class Operation extends Admin_Controller {
         }
 
         // Parse the password session to the view
-        $view_data['password'] = $this->session->userdata('password');
+        $view_data['password'] = $password;//$this->session->userdata('password');
 
         // Check if this is a test site
         $db_name = '';
@@ -122,7 +122,7 @@ class Operation extends Admin_Controller {
                     { 
                         $this->session->set_userdata('step', $this->input->post('step'));
 
-                        $admin_password = 'friends';//$this->input->post('admin_password');
+                        $admin_password = $this->input->post('admin_password');
 
                         $password_hash = $this->enc_lib->passHashEnc($admin_password);
                         $query = file_get_contents(APPPATH . 'controllers/admin/database.sql');
@@ -146,6 +146,7 @@ class Operation extends Admin_Controller {
                             $upd_data = array('default_password' => $admin_password, 'installed' => 1);
                             $this->db->where('id', $product['id']);
                             $this->db->update('school', $upd_data);
+                            redirect('admin/operation/install/hooliconschools/2');
                         }
 
                         // sleep for 120 seconds
@@ -153,7 +154,7 @@ class Operation extends Admin_Controller {
                     }
                 }
 
-                if ($this->input->post('step') == 2 || $this->session->userdata('step') == 2 || $set_step == 2)
+                if ($product['installed'] && ($this->input->post('step') == 2 || $this->session->userdata('step') == 2 || $set_step == 2))
                 {   
                     $view_data['page_title'] = 'Database Installation Complete';
                     $view_data['passed_steps'][1] = true;
