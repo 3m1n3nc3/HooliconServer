@@ -208,11 +208,18 @@ class Operation extends Admin_Controller {
             // Start the MySQLi Connection            
             $link = @mysqli_connect($this->db->hostname, $this->db->username, $this->db->password, $db_name);
 
-            // Validate the received input
-            $this->form_validation->set_rules('admin_password', 'Password', 'trim|required|matches[admin_passwordr]');
-            $this->form_validation->set_rules('admin_passwordr', 'Confirm password', 'trim|required');
-
-            if ($this->form_validation->run() !== FALSE) 
+            // Validate the received input 
+            if (!$this->input->post('admin_password')) 
+            {  
+                echo json_encode(array('status' => '0', 'msg' => 'Password is required.'));
+            }
+            elseif (!$this->input->post('admin_passwordr')) {  
+                echo json_encode(array('status' => '0', 'msg' => 'Confirm password is required.'));
+            }
+            elseif ($this->input->post('admin_password') !== $this->input->post('admin_passwordr')) {  
+                echo json_encode(array('status' => '0', 'msg' => 'Password and Confirm password do not match.'));
+            }
+            else
             {  
                 $admin_password = $this->input->post('admin_password');
 
@@ -250,11 +257,6 @@ class Operation extends Admin_Controller {
                     // Installation error
                     echo json_encode(array('status' => '0', 'msg' => 'Unable to install Database'));
                 }
-            }
-            else
-            {
-                // Password and inout error
-                echo json_encode(array('status' => '0', 'msg' => validation_errors('<div class="text-danger"><small>', '</small></div>')));
             }
         }
         else
