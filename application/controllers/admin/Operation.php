@@ -221,7 +221,7 @@ class Operation extends Admin_Controller {
             {
                 echo json_encode(array('status' => '0', 'msg' => 'Confirm Password is required'), JSON_FORCE_OBJECT);
             }
-            elseif ($this->input->post('admin_password') !== $this->input->post('admin_passwordr'), JSON_FORCE_OBJECT) 
+            elseif ($this->input->post('admin_password') !== $this->input->post('admin_passwordr'), JSON_FORCE_OBJECT);
             {
                 echo json_encode(array('status' => '0', 'msg' => 'Password and Confirm Password do not match'), JSON_FORCE_OBJECT);
             }
