@@ -299,7 +299,7 @@
         
         <!-- Jquery -->
         <script src="<?php echo base_url(); ?>backend/plugins/jquery/jquery.min.js"></script>
-        
+
         <!-- Installation -->
         <script type="text/javascript">
 
@@ -307,8 +307,8 @@
 
                 $('#js_message').html('');
 
-                var password = $('input[name="admin_password"]').val();
-                var passwordr = $('input[name="admin_passwordr"]').val();
+                var admin_password = $('input[name="admin_password"]').val();
+                var admin_passwordr = $('input[name="admin_passwordr"]').val();
 
                 $.ajax({
                     type: 'POST',
