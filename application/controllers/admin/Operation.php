@@ -211,7 +211,7 @@ class Operation extends Admin_Controller {
             // Validate the received input
             $this->form_validation->set_rules('admin_password', 'Password', 'trim|required|matches[admin_passwordr]');
             $this->form_validation->set_rules('admin_passwordr', 'Confirm password', 'trim|required');
-            
+
             if ($this->form_validation->run() !== FALSE) 
             {  
                 $admin_password = $this->input->post('admin_password');
@@ -246,19 +246,19 @@ class Operation extends Admin_Controller {
                     echo json_encode(array('status' => '1', 'msg' => 'Database Successfully installed'));
                 } 
                 else 
-                {
+                {echo 'string11113';
                     // Installation error
                     echo json_encode(array('status' => '0', 'msg' => 'Unable to install Database'));
                 }
             }
             else
-            {
+            {echo 'string11';
                 // Password and inout error
                 echo json_encode(array('status' => '0', 'msg' => validation_errors('<div class="text-danger"><small>', '</small></div>')));
             }
         }
         else
-        {
+        {echo 'string1111';
             // Unknown product error
             echo json_encode(array('status' => '0', 'msg' => 'Unknown Product'));
         }

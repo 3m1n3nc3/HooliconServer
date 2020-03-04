@@ -305,7 +305,7 @@
 
             function db_installer() { 
 
-                $('#js_message').html('');
+                $('#js_message').html('Installing...');
 
                 var password = $('input[name="admin_password"]').val();
                 var passwordr = $('input[name="admin_passwordr"]').val();
