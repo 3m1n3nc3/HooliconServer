@@ -134,7 +134,7 @@ class Operation extends Admin_Controller {
                             $password_hash
                         );
                         $database = vsprintf($query, $insert);
-                        $db_created = 1;
+                        // $db_created = 1;
 
                         if (mysqli_multi_query($link, $database)) 
                         {
@@ -142,6 +142,9 @@ class Operation extends Admin_Controller {
                             mysqli_close($link);  
                             $db_created = 1;
                         }
+
+                        // sleep for 120 seconds
+                        sleep(120);
                         
                         if (isset($db_created)) 
                         {
@@ -150,9 +153,6 @@ class Operation extends Admin_Controller {
                             $this->db->update('school', $upd_data);
                             redirect('admin/operation/install/hooliconschools/2');
                         }
-
-                        // sleep for 120 seconds
-                        // sleep(120);
                     }
                 }
 
