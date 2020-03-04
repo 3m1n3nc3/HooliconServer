@@ -264,11 +264,11 @@ class Operation extends Admin_Controller {
                     echo json_encode(array('status' => '0', 'msg' => 'Unable to install Database'));
                 }
             }
-            else
-            {echo 'string11';
-                // Password and inout error
-                echo json_encode(array('status' => '0', 'msg' => validation_errors('<div class="text-danger"><small>', '</small></div>')));
-            }
+            // else
+            // { 
+            //     // Password and inout error
+            //     echo json_encode(array('status' => '0', 'msg' => validation_errors('<div class="text-danger"><small>', '</small></div>')));
+            // }
         }
         else
         {echo 'string1111';
