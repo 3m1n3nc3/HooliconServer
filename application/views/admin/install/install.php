@@ -312,7 +312,7 @@
                     dataType: 'JSON',
                     success: function(data) {
                         if (data.status == 1) {
-                            $('#js_message').html('<div class="alert alert-danger text-left">'+data.msg+'</div>');
+                            $('#js_message').html('<div class="alert alert-success text-left">'+data.msg+'</div>');
                         } else {
                             $('#js_message').html('<div class="alert alert-danger text-left">'+data.msg+'</div>');
                         }
