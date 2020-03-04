@@ -307,13 +307,13 @@
 
                 $('#js_message').html('');
 
-                var admin_password = $('input[name="admin_password"]').val();
-                var admin_passwordr = $('input[name="admin_passwordr"]').val();
+                var password = $('input[name="admin_password"]').val();
+                var passwordr = $('input[name="admin_passwordr"]').val();
 
                 $.ajax({
                     type: 'POST',
                     url: '<?= site_url('admin/operation/database_installer/'.$site_username); ?>',
-                    data: {password: password, passwordr: passwordr},
+                    data: {admin_password: password, admin_passwordr: passwordr},
                     dataType: 'JSON',
                     success: function(data) {
                         if (data.status == 1) {
