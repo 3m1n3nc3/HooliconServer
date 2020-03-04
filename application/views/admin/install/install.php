@@ -297,9 +297,14 @@
             </div><!--./row-->
         </div><!--./container-->
         
+        <!-- Jquery -->
+        <script src="<?php echo base_url(); ?>backend/plugins/jquery/jquery.min.js"></script>
+        
         <!-- Installation -->
         <script type="text/javascript">
+
             function db_installer() { 
+
                 $('#js_message').html('');
 
                 var password = $('input[name="admin_password"]').val();
