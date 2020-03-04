@@ -307,7 +307,7 @@
 
                 $.ajax({
                     type: 'POST',
-                    url: '<?php site_url('admin/operation/database_installer/'.$site_username); ?>',
+                    url: '<?= site_url('admin/operation/database_installer/'.$site_username); ?>',
                     data: {password: password, passwordr: passwordr},
                     dataType: 'JSON',
                     success: function(data) {
