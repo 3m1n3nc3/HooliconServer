@@ -271,7 +271,7 @@ class Operation extends Admin_Controller {
             // }
         }
         else
-        {echo 'string1111';
+        {
             // Unknown product error
             echo json_encode(array('status' => '0', 'msg' => 'Unknown Product'), JSON_FORCE_OBJECT);
         }
