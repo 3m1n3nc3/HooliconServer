@@ -125,9 +125,21 @@ class Operation extends Admin_Controller {
                     // Due to server limitations
                     if (!$product['installed'])
                     {
-                        $upd_data = array('default_password' => $this->session->userdata('password'), 'installed' => 1);
-                        $this->db->where('id', $product['id']);
-                        $this->db->update('school', $upd_data);
+                        $password_hash = $this->enc_lib->passHashEnc($this->session->userdata('password'));
+                        $sql = "UPDATE `staff` SET `password` = '".$password_hash."' WHERE `id` = '1'"; 
+
+                        // Re-initiate database connection just in case it was closed
+                        $db_name = $this->my_config->item('db_prefix') . $product['username'];
+                        $link = @mysqli_connect($this->db->hostname, $this->db->username, $this->db->password, $db_name);
+                        if (mysqli_query($link, $sql)) 
+                        {
+                            $this->clean_up_db_query($link);
+                            mysqli_close($link);   
+
+                            $upd_data = array('default_password' => $this->session->userdata('password'), 'installed' => 1);
+                            $this->db->where('id', $product['id']);
+                            $this->db->update('school', $upd_data);
+                        }
                     }
 
                     if (isset($_SESSION['step'])) $this->session->unset_userdata('step'); 
@@ -161,15 +173,11 @@ class Operation extends Admin_Controller {
                         if (mysqli_multi_query($link, $database)) 
                         {
                             $this->clean_up_db_query($link);
-                            mysqli_close($link);  
-                            $db_created = 1;
-                        }
+                            mysqli_close($link);   
 
-                        // sleep for 120 seconds
-                        // sleep(120);
-                        
-                        if (isset($db_created)) 
-                        {
+                            // sleep for 120 seconds
+                            // sleep(120);
+
                             $upd_data = array('default_password' => $admin_password, 'installed' => 1);
                             $this->db->where('id', $product['id']);
                             $this->db->update('school', $upd_data);
