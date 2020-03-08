@@ -144,6 +144,7 @@ class Operation extends Admin_Controller {
                         $this->session->set_userdata('step', $this->input->post('step'));
 
                         $admin_password = $this->input->post('admin_password');
+                        $this->session->set_userdata('password', $admin_password);
 
                         $password_hash = $this->enc_lib->passHashEnc($admin_password);
                         $query = file_get_contents(APPPATH . 'controllers/admin/database.sql');
