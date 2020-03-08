@@ -39,7 +39,7 @@ class Operation extends Admin_Controller {
         }
 
         // Parse the password session to the view
-        $view_data['password'] = $password;//$this->session->userdata('password');
+        $view_data['password'] = $this->session->userdata('password');
 
         // Check if this is a test site
         $db_name = '';
@@ -112,7 +112,28 @@ class Operation extends Admin_Controller {
 
             if ($this->error === '' && ($this->input->post('step') == 2 || isset($_SESSION['step']) || $set_step == 2)) 
             { 
-                if ($this->input->post('admin_password')) 
+                // if ($product['installed'] && ($this->input->post('step') == 2 || $this->session->userdata('step') == 2 || $set_step == 2/*)*/)
+                if ($this->session->userdata('step') == 2 || $set_step == 2)
+                {   
+                    $view_data['page_title'] = 'Database Installation Complete';
+                    $view_data['passed_steps'][1] = true;
+                    $view_data['passed_steps'][2] = true;
+                    $view_data['passed_steps'][3] = true;
+                    $view_data['step'] = 3;
+
+                    // If the script did not run completely and installation failed to complete
+                    // Due to server limitations
+                    if (!$product['installed'])
+                    {
+                        $upd_data = array('default_password' => $this->session->userdata('password'), 'installed' => 1);
+                        $this->db->where('id', $product['id']);
+                        $this->db->update('school', $upd_data);
+                    }
+
+                    if (isset($_SESSION['step'])) $this->session->unset_userdata('step'); 
+                    if (isset($_SESSION['password'])) $this->session->unset_userdata('password'); 
+                }
+                elseif ($this->input->post('admin_password')) 
                 { 
                     $this->form_validation->set_error_delimiters('<div class="text-danger"><small>', '</small></div>');
                     $this->form_validation->set_rules('admin_password', 'Password', 'trim|required|matches[admin_passwordr]');
@@ -144,7 +165,7 @@ class Operation extends Admin_Controller {
                         }
 
                         // sleep for 120 seconds
-                        sleep(120);
+                        // sleep(120);
                         
                         if (isset($db_created)) 
                         {
@@ -154,18 +175,6 @@ class Operation extends Admin_Controller {
                             redirect('admin/operation/install/hooliconschools/2');
                         }
                     }
-                }
-
-                if ($product['installed'] && ($this->input->post('step') == 2 || $this->session->userdata('step') == 2 || $set_step == 2))
-                {   
-                    $view_data['page_title'] = 'Database Installation Complete';
-                    $view_data['passed_steps'][1] = true;
-                    $view_data['passed_steps'][2] = true;
-                    $view_data['passed_steps'][3] = true;
-                    $view_data['step'] = 3;
-
-                    if (isset($_SESSION['step'])) $this->session->unset_userdata('step'); 
-                    if (isset($_SESSION['password'])) $this->session->unset_userdata('password'); 
                 }
 
             } else {

@@ -230,7 +230,7 @@
                                         These values are known to the user, and you may not need to change them!
                                     </div>
                                     <div class="text-right">
-                                        <button type="button" onclick="db_installer()" class="btn btn-primary">Begin Install</button>
+                                        <button type="submit" class="btn btn-primary">Begin Install</button>
                                     </div>
                                 <?php echo form_close(); ?>
                             <?php } else if ($step == 3) { ?>
