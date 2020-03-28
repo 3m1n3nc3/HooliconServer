@@ -110,7 +110,7 @@ class Account_Data {
     public function user_logout()
     {   
         delete_cookie('username');
-        $this->CI->session->unset_userdata('username');
+        $this->CI->session->unset_userdata(['uid', 'username', 'fullname', 'department_name']);
         $this->CI->session->sess_destroy();
     }
 
@@ -119,6 +119,23 @@ class Account_Data {
         delete_cookie('admin');
         $this->CI->session->unset_userdata('admin');
         $this->CI->session->sess_destroy();
+    }
+
+    public function employee_login($user)
+    {   
+        $data = $this->CI->user_model->fetch_user($user['employee_id']);
+        $dept = $this->CI->departments_model->getDepartment($data['department_id']);
+
+        $space = $data['employee_firstname'] && $data['employee_lastname'] ? ' ' : '';
+        $fullname = ($data['employee_firstname'] || $data['employee_lastname'] ? ($data['employee_firstname'] ?? '') . $space . ($data['employee_lastname'] ?? '') : $data['employee_username']);
+
+        $data = array(
+            'uid' => $data['employee_id'],
+            'username' => $data['employee_username'],
+            'fullname' => $fullname,
+            'department_name' => $dept[0]->department_name
+        );
+        $this->CI->session->set_userdata($data);
     }
 
     public function days_diff($far_date = NULL, $close_date = NULL)

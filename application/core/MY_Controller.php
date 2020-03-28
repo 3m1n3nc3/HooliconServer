@@ -2,94 +2,45 @@
 
 class MY_Controller extends CI_Controller
 { 
-
     public function __construct()
     {
-
         parent::__construct();  
-        $this->my_config->item('primary_server');
-        $this->ip->save();
-        $this->currency     = $this->my_config->item('currency_code');
-        $this->cr_symbol    = $this->intl->currency(3, $this->my_config->item('currency_code'));
-        $this->frcr_symbol    = $this->my_config->item('currency_symbol');
+        $this->CI =& get_instance();  
 
-        if ($this->account_data->logged_in()) $this->admin_logged_in = TRUE;
-        if ($this->account_data->user_logged_in()) $this->user_logged_in = TRUE;
-    }
-
-}
-
-
-class Api_Controller extends MY_Controller
-{
-
-
-}
-
-class Access_Controller extends MY_Controller
-{
-
-    public function __construct()
-    {
-
-        parent::__construct();  
-
-    }
-
-}
-
-class Frontsite_Controller extends MY_Controller
-{
-
-    public function __construct()
-    {
-
-        parent::__construct();  
-
-    }
-
-}
-
-
-class User_Controller extends MY_Controller
-{
-
-    public function __construct()
-    {
-
-        parent::__construct();    
-        $this->account_data->is_logged_in_user('user'); 
-
-        $this->is_user = TRUE;
-
-        if ($this->session->has_userdata('username')) {
-            $this->account = $this->account_data->fetch($this->session->userdata('username'));
-        } elseif (get_cookie('username')) {
-            $this->account = $this->account_data->fetch(get_cookie('username'));
+        // $CI->output->enable_profiler(TRUE);
+        if ($this->input->get('set_theme')) 
+        {
+            $this->session->set_userdata('site_theme', $this->input->get('set_theme'));
         }
 
+        if ($this->session->userdata('site_theme')) 
+        {
+            $this->h_theme = $this->session->userdata('site_theme');
+        }
+        else
+        {
+            $this->h_theme = 'modern';
+        }
+
+        $this->uid      = $this->CI->session->userdata('uid');
+        $this->username = $this->CI->session->userdata('username');
+        $this->fullname = $this->CI->session->userdata('fullname');
+        $this->department_name = $this->CI->session->userdata('department_name');
+        $this->show_guide      = !$this->CI->session->userdata('show_guide');
     }
 
+    function check_login()
+    {
+        if(!$this->uid)
+            redirect("login");
+    } 
 }
-
 
 class Admin_Controller extends MY_Controller
 {
-
     public function __construct()
     {
-
-        parent::__construct();    
-        $this->account_data->is_logged_in(); 
-
-        $this->is_admin = TRUE;
-
-        if ($this->session->has_userdata('admin')) {
-            $this->account = $this->account_data->fetch($this->session->userdata('admin'), 1);
-        } elseif (get_cookie('admin')) {
-            $this->account = $this->account_data->fetch(get_cookie('admin'), 1);
-        }
- 
-    }
-
-}
+        parent::__construct(); 
+        $this->check_login();  
+    } 
+} 

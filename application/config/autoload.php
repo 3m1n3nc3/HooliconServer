@@ -60,7 +60,7 @@ $autoload['packages'] = array();
 */
 $autoload['libraries'] = array(
 	'database', 'form_validation', 'session', 'upload', 'pagination', 'Licenser', 'Aes', 'enc_lib', 'Curler', 
-	'Account_Data', 'my_config', 'Creative_lib', 'Ip', 'Intl'
+	'Account_Data', 'my_config', 'Creative_lib', 'Ip', 'Intl', 'Hms_parser'
 );
 
 /*
@@ -92,7 +92,9 @@ $autoload['drivers'] = array();
 |
 |	$autoload['helper'] = array('url', 'file');
 */
-$autoload['helper'] = array('url', 'cookie', 'file', 'date', 'string', 'text');
+$autoload['helper'] = array(
+    'url', 'cookie', 'file', 'date', 'string', 'text', 'hoolicon', 'passcontest'
+);
 
 /*
 | -------------------------------------------------------------------
@@ -120,7 +122,7 @@ $autoload['config'] = array();
 | "codeigniter_lang.php" would be referenced as array('codeigniter');
 |
 */
-$autoload['language'] = array('api_build');
+$autoload['language'] = array('hmsystem_lang');
 
 /*
 | -------------------------------------------------------------------
@@ -135,4 +137,7 @@ $autoload['language'] = array('api_build');
 |
 |	$autoload['model'] = array('first_model' => 'first');
 */
-$autoload['model'] = array('user_model', 'admin_model', 'school_model', 'license_model', 'product_model', 'dashboard_model', 'content_model');
+$autoload['model'] = array(
+    'user_model', 'employee_model', 'room_model', 'departments_model', 'services_model', 'medical_service_model', 
+    'report_model', 'reservation_model', 'customer_model', 'sport_facility_model', 'massage_room_model'
+);

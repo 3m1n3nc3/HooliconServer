@@ -56,6 +56,7 @@ class My_config {
         
         return $interval->format($differenceFormat);
     }
+    
     public function timeDifference($date_1, $date_2)
     {
     	$datetime1 = strtotime($date_1);

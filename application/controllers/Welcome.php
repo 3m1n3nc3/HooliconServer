@@ -1,46 +1,28 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Welcome extends Frontsite_Controller {
+class Welcome extends Admin_Controller { 
 
-    public function __construct()
-    {
-        parent::__construct();
-        redirect('access/login');
-    }
-	
 	public function index()
-	{	
-		$data['slides'] = $this->content_model->get(['type' => 'main_slides']);
-		$data['about'] = $this->content_model->get(['type' => 'about'], true);
-		$data['services'] = $this->content_model->get(['type' => 'services']);
-		$data['products'] = $this->content_model->get(['type' => 'products']);
-		$data['partners'] = $this->content_model->get(['type' => 'partners']);
-		$data['team'] = $this->content_model->get(['type' => 'team']);
-		$data['parallax'] = $this->content_model->get(['type' => 'parallax'], true);
-		$data['parallax_one'] = $data['parallax']['image'];
+	{ 
+		$today_stats = $this->report_model->today_stats();
+		$customer_pay_list = $this->report_model->get_customer_freq_list();
+		$customer_most_paid = $this->report_model->get_customer_most_paid();
+		$next_week_freq = $this->report_model->get_next_week_freq();
+		
+		$data = array('title' => HOTEL_NAME, 'page' => 'dashboard', 'has_calendar' => TRUE);
+		$this->load->view($this->h_theme.'/header', $data);
 
-		$this->load->view('layout/frontsite/header', $data);
-		$this->load->view('frontsite/homepage', $data);
-		$this->load->view('layout/frontsite/footer', $data);
-	}
-	
-	public function details($id = '', $static_page = '')
-	{	
-		$data['fix_nav'] = true;
-		$data['static'] = $static_page;
-		if ($id == 'static') {
-			$data['content'] = $this->content_model->get(['type' => $static_page], true);
-		}	else {
-			$data['content'] = $this->content_model->get($id);
-		}
-		if ($data['content']) { 
-			$data['page_title'] = $data['content']['title'];
-			$this->load->view('layout/frontsite/header_clickable', $data);
-			$this->load->view('frontsite/details', $data);
-			$this->load->view('layout/frontsite/footer', $data);
-		} else {
-			redirect('errors/error_404');
-		}
+		$viewdata = array(
+			'today_stats' => $today_stats,
+			'customer_pay_list' => $customer_pay_list,
+			'customer_most_paid' => $customer_most_paid,
+			'next_week_freq' => $next_week_freq
+		);
+		$this->load->view($this->h_theme.'/welcome_message', $viewdata);
+		$this->load->view($this->h_theme.'/footer', array("next_week_freq"=>$next_week_freq));
+		$this->session->set_userdata('show_guide',true);
 	}
 }
+
+/* End of file welcome.php */
+/* Location: ./application/controllers/welcome.php */

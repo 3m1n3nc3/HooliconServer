@@ -1,6 +1,8 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
+define('HOTEL_NAME', "Hayatt Regency Suites"); 
+
 /*
 |--------------------------------------------------------------------------
 | Display Debug backtrace

@@ -1,11 +1,10 @@
 <?php
 
-if (!defined('BASEPATH'))
-    exit('No direct script access allowed');
-
 class User_model extends CI_Model {
 
-    public function __construct() {
+    function __construct()
+    {
+        // Call the Model constructor
         parent::__construct();
     }
 
@@ -15,137 +14,59 @@ class User_model extends CI_Model {
      * @param int $id
      * @return mixed
      */
-    public function get($id = null) {
-        $this->db->select('*')->from('user');
-        if ($id != null) {
-            $this->db->where('id', $id);
-            $this->db->or_where('username', $id);
-            $this->db->or_where('email', $id); 
-        } else {
-            $this->db->order_by('id');
+    public function fetch_user($id = null) {
+        $this->db->select('*')->from('employee');
+        if ($id != null) 
+        {
+            $this->db->where('employee_id', $id);
+            $this->db->or_where('employee_username', $id);
+            $this->db->or_where('employee_email', $id); 
+        } 
+        else
+        {
+            $this->db->order_by('employee_id');
         }
+
         $query = $this->db->get();
-        if ($id != null) {
+        if ($id != null)
+        {
             return $query->row_array();
-        } else {
+        } 
+        else
+        {
             return $query->result_array();
         }
     }
 
-    /**
-     * This function will delete the record based on the id
-     * @param $id
-     */
-    public function remove($id) {
-        $this->db->where('id', $id);
-        $this->db->delete('user');
-        return $this->db->affected_rows();
-    }
-
-    /**
-     * This function will take the post data passed from the controller
-     * If id is present, then it will do an update
-     * else an insert. One function doing both add and edit.
-     * @param $data
-     */
-    public function add($data) {
-        if (isset($data['id'])) {
-            $this->db->where('id', $data['id']);
-            $this->db->update('user', $data);
-        } else {
-            $this->db->insert('user', $data);
-            $insert_id = $this->db->insert_id();
-            return $insert_id;
-        }
-    } 
-
-    public function userLogin($data) {
-        $this->db->select('id, username, password');
-        $this->db->from('user');
-        $this->db->where('email', $data['username']);
-        $this->db->or_where('username', $data['username']);
-        $this->db->where('password', MD5($data['password']));
+    public function check_login($data) 
+    {
+        $this->db->select('employee_id, employee_username, employee_password');
+        $this->db->from('employee');
+        $this->db->where('employee_email', $data['username']);
+        $this->db->or_where('employee_username', $data['username']);
+        $this->db->where('employee_password', MD5($data['password']));
         $this->db->limit(1);
         $query = $this->db->get();
-        if ($query->num_rows() == 1) {
-            return $query->result();
-        } else {
+        if ($query->num_rows() == 1) 
+        {
+            return $query->row_array();
+        } 
+        else 
+        {
             return false;
         }
     }
-
-    public function read_user_information($email) {
-        $condition = "email =" . "'" . $email . "'";
-        $this->db->select('*');
-        $this->db->from('user');
-        $this->db->where($condition);
-        $this->db->limit(1);
-        $query = $this->db->get();
-        if ($query->num_rows() == 1) {
-            return $query->result();
-        } else {
-            return false;
-        }
-    }
-
-    public function readByEmail($email) {
-        $condition = "email =" . "'" . $email . "'";
-        $this->db->select('*');
-        $this->db->from('user');
-        $this->db->where($condition);
-        $this->db->limit(1);
-        $query = $this->db->get();
-        if ($query->num_rows() == 1) {
-            return $query->row();
-        } else {
-            return false;
-        }
-    } 
-
-    public function change_password($data) {
-        $condition = "id =" . "'" . $data['id'] . "'";
-        $this->db->select('password');
-        $this->db->from('user');
-        $this->db->where($condition);
-        $this->db->limit(1);
-        $query = $this->db->get();
-        if ($query->num_rows() == 1) {
-            return $query->result();
-        } else {
-            return false;
-        }
-    }
-
-    public function checkOldPass($data) {
-        $this->db->where('id', $data['user_id']);        
-        $this->db->where('email', $data['user_email']);
-        $query = $this->db->get('user');
-
-
-        if ($query->num_rows() > 0)
-            return TRUE;
-        else
-            return FALSE;
-    }
-
-    public function saveNewPass($data) {
-        $this->db->where('id', $data['id']);
-        $query = $this->db->update('user', $data);
-        if ($query) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public function saveForgotPass($data) {
-        $this->db->where('email', $data['email']);
-        $query = $this->db->update('user', $data);
-        if ($query) {
-            return true;
-        } else {
-            return false;
-        }
-    } 
-
 }
+
+
+// SELECT * FROM employee WHERE employee_username = '$username' AND employee_password = '$password'
+
+// $username = admin\' or 1=1--
+// $password = 12345
+
+// SELECT * FROM employee WHERE employee_username = 'admin' or 1=1--' AND employee_password = '12345'
+
+// $restoran_name = "Cihad'in Yeri"
+
+// SELECT * FROM restorans WHERE restoran_name = '$restoran_name'
+// SELECT * FROM restorans WHERE restoran_name = 'Cihad'in Yeri'
